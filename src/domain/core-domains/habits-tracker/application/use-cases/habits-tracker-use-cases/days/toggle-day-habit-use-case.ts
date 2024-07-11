@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 
 import { Either, left, right } from '@/core/either'
 import { DayAlreadyExistsError } from '@/core/errors/errors/day-already-exists-error'
@@ -22,6 +23,8 @@ export type ToggleDayHabitUseCaseResponse = Either<
   { day: Day }
 >
 
+dayjs.extend(utc)
+
 export class ToggleDayHabitUseCase {
   constructor(
     private daysRepository: DaysRepository,
@@ -35,7 +38,7 @@ export class ToggleDayHabitUseCase {
     date,
     habitId,
   }: ToggleDayHabitUseCaseRequest): Promise<ToggleDayHabitUseCaseResponse> {
-    date = dayjs(date).startOf('day').toDate()
+    date = dayjs.utc(date).startOf('day').toDate()
 
     const existingDay = await this.daysRepository.findByDateAndUserId(
       date,

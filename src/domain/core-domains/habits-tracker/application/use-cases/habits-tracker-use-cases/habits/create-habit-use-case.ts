@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 
 import { Either, right } from '@/core/either'
 
@@ -15,6 +16,8 @@ export interface CreateHabitUseCaseRequest {
 
 export type CreateHabitUseCaseResponse = Either<null, null>
 
+dayjs.extend(utc)
+
 export class CreateHabitUseCase {
   constructor(private habitsRepository: HabitsRepository) {}
 
@@ -26,7 +29,7 @@ export class CreateHabitUseCase {
     const habit = Habit.create({
       title,
       userId,
-      createdAt: dayjs().startOf('day').toDate(),
+      createdAt: dayjs.utc().startOf('day').toDate(),
     })
     const weekDaysList = weekDays.map((item) =>
       WeekDayHabit.create({ habitId: habit.id.value, userId, weekDay: item }),

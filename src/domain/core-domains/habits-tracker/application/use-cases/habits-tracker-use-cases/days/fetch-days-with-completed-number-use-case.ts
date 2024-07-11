@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 
 import { Either, right } from '@/core/either'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
@@ -26,6 +27,8 @@ export type FetchDaysWithCompletedNumberUseCaseResponse = Either<
   }[]
 >
 
+dayjs.extend(utc)
+
 export class FetchDaysWithCompletedNumberUseCase {
   constructor(
     private daysRepository: DaysRepository,
@@ -44,7 +47,7 @@ export class FetchDaysWithCompletedNumberUseCase {
 
     const result = await Promise.all(
       days.map(async (day) => {
-        const weekDay = dayjs(day?.date).get('day')
+        const weekDay = dayjs.utc(day?.date).get('day')
         const totalDayHabitsCount = await this.habitsRepository.countByWeekDay(
           weekDay,
           undefined,
