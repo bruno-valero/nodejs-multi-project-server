@@ -19,7 +19,11 @@ import { env } from './env'
 export const app = fastify({ logger: true })
 
 app.register(cors, {
-  origin: [`http://localhost:${env.PORT}`, 'http://localhost:3000'],
+  origin: [
+    `http://localhost:${env.PORT}`,
+    'http://localhost:3000',
+    'https://habits.brunovalero.com.br',
+  ],
   allowedHeaders: [
     'Origin',
     'x-requested-with',
@@ -49,7 +53,7 @@ app.register(application, { prefix: '/habits-tracker' })
 app.register(users, { prefix: '/habits-tracker' })
 
 app.setErrorHandler((err, _req, res) => {
-  if (env.NODE_ENV !== 'prod') {
+  if (env.NODE_ENV !== 'production') {
     console.error(err)
   }
   if (err instanceof ZodError) {
