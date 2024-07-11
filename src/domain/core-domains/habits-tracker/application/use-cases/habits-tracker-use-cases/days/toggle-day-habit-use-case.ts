@@ -40,13 +40,13 @@ export class ToggleDayHabitUseCase {
   }: ToggleDayHabitUseCaseRequest): Promise<ToggleDayHabitUseCaseResponse> {
     date = dayjs.utc(date).startOf('day').toDate()
 
+    console.log('findByDateAndUserId - date', date, 'userId', userId)
     const existingDay = await this.daysRepository.findByDateAndUserId(
       date,
       userId,
     )
 
     let currDay = existingDay
-
     if (!currDay) {
       const dayResp = await this.createDayUseCase.execute({
         date,
