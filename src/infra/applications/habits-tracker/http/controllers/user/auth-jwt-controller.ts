@@ -43,7 +43,7 @@ export async function authJwtController(
         path: '/',
         secure: true,
         httpOnly: true,
-        sameSite: true,
+        sameSite: 'none',
       })
       .status(204)
       .send()
