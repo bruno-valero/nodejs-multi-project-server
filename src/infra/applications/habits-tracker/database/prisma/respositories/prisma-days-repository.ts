@@ -12,15 +12,17 @@ export class PrismaDaysRepository implements DaysRepository {
   ) {}
 
   async create(day: Day): Promise<void> {
+    console.log('creating day', day)
+    const newDay = PrismaDaysMapper.domainToPrisma(day)
+    console.log('newDay', newDay)
+    await this.prisma.prismaDay.create({
+      data: newDay,
+    })
+
     const dayHabits = [
       ...day.dayHabits.getItems(),
       ...day.dayHabits.getNewItems(),
     ]
-
-    await this.prisma.prismaDay.create({
-      data: PrismaDaysMapper.domainToPrisma(day),
-    })
-
     await this.dayHabitsRepository.createMany(dayHabits)
   }
 
@@ -46,8 +48,10 @@ export class PrismaDaysRepository implements DaysRepository {
   async findByDateAndUserId(date: Date, userId: string): Promise<Day | null> {
     const prismaDay = await this.prisma.prismaDay.findUnique({
       where: {
-        userId,
-        date,
+        date_userId: {
+          userId,
+          date,
+        },
       },
     })
 

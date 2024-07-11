@@ -6382,16 +6382,17 @@ export namespace Prisma {
 
   export type PrismaDayWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    date?: Date | string
+    date_userId?: PrismaDayDateUserIdCompoundUniqueInput
     AND?: PrismaDayWhereInput | PrismaDayWhereInput[]
     OR?: PrismaDayWhereInput[]
     NOT?: PrismaDayWhereInput | PrismaDayWhereInput[]
+    date?: DateTimeFilter<"PrismaDay"> | Date | string
     userId?: StringFilter<"PrismaDay"> | string
     createdAt?: DateTimeFilter<"PrismaDay"> | Date | string
     updatedAt?: DateTimeNullableFilter<"PrismaDay"> | Date | string | null
     user?: XOR<PrismaUserRelationFilter, PrismaUserWhereInput>
     prismaDayHabits?: PrismaDayHabitListRelationFilter
-  }, "id" | "date">
+  }, "id" | "date_userId">
 
   export type PrismaDayOrderByWithAggregationInput = {
     id?: SortOrder
@@ -6984,6 +6985,11 @@ export namespace Prisma {
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type PrismaDayDateUserIdCompoundUniqueInput = {
+    date: Date | string
+    userId: string
   }
 
   export type PrismaDayCountOrderByAggregateInput = {

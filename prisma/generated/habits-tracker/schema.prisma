@@ -29,7 +29,7 @@ model PrismaHabit {
 
 model PrismaDay {
   id        String    @id @default(uuid())
-  date      DateTime  @unique
+  date      DateTime
   userId    String    @map("user_id")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @map("updated_at")
@@ -38,6 +38,7 @@ model PrismaDay {
 
   prismaDayHabits PrismaDayHabit[]
 
+  @@unique([date, userId])
   @@map("days")
 }
 

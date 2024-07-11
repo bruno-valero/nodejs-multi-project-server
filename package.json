@@ -16,7 +16,7 @@
     "prisma:generate:habits": "prisma generate --schema prisma/schema-habits-tracker.prisma",
     "prisma:migrate:habits": "prisma migrate dev --schema prisma/schema-habits-tracker.prisma",
     "migrate": "run-s prisma:migrate:habits prisma:generate:habits",
-    "migrate:force": "prisma migrate deploy",
+    "migrate:force:habits": "prisma migrate deploy --schema prisma/schema-habits-tracker.prisma",
     "migrate:dev": "run-s prisma:migrate:habits",
     "db:habits": "prisma studio --schema prisma/schema-habits-tracker.prisma",
     "dev": "tsx watch src/infra/server.ts",
