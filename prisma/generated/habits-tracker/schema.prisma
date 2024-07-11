@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/habits-tracker"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_HABITS_TRACKER_TRANSACTION")
+  directUrl = env("DATABASE_URL_HABITS_TRACKER_SESSION")
+}
+
+model PrismaHabit {
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    String   @map("user_id")
+
+  prismaDayHabits     PrismaDayHabit[]
+  prismaHabitWeekDays PrismaWeekDayHabit[]
+
+  @@map("habits")
+}
+
+model PrismaDay {
+  id        String    @id @default(uuid())
+  date      DateTime  @unique
+  userId    String    @map("user_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+
+  user PrismaUser @relation(fields: [userId], references: [id])
+
+  prismaDayHabits PrismaDayHabit[]
+
+  @@map("days")
+}
+
+model PrismaDayHabit {
+  id      String @id @default(uuid())
+  habitId String @map("habit_id")
+  dayId   String @map("day_id")
+  userId  String
+
+  habit PrismaHabit @relation(fields: [habitId], references: [id])
+  day   PrismaDay   @relation(fields: [dayId], references: [id])
+  user  PrismaUser  @relation(fields: [userId], references: [id])
+
+  @@unique([habitId, dayId, userId])
+  @@map("day_habits")
+}
+
+model PrismaWeekDayHabit {
+  id      String @id @default(uuid())
+  habitId String @map("habit_id")
+  weekDay Int    @map("week_day")
+  userId  String
+
+  habit PrismaHabit @relation(fields: [habitId], references: [id])
+  user  PrismaUser  @relation(fields: [userId], references: [id])
+
+  @@unique([habitId, weekDay, userId])
+  @@map("week_day_habits")
+}
+
+model PrismaUser {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password_hash String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  prismaDayHabits     PrismaDayHabit[]
+  prismaHabitWeekDays PrismaWeekDayHabit[]
+  prismaDays          PrismaDay[]
+}

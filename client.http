@@ -1,0 +1,104 @@
+@baseUrl = http://localhost:3333
+
+@authToken = {{authJwt.response.headers.set-cookie}}
+
+@firstHabit = {{fetchHabits.response.body.habits[0]}}
+@firstHabitId = {{fetchHabits.response.body.habits[0].id}}
+
+# @name create_user_jwt
+POST {{baseUrl}}/habits-tracker/users/register/jwt
+Content-Type: application/json
+
+{
+    "email": "bruno@gmail.com",
+    "password": "123456"
+}
+
+###
+
+
+# @name authJwt
+POST {{baseUrl}}/habits-tracker/users/authenticate/jwt
+Content-Type: application/json
+
+{
+    "email": "bruno@gmail.com",
+    "password": "123456"
+}
+
+###
+
+# @name getUser
+GET {{baseUrl}}/habits-tracker/users
+Cookie: {{authToken}}
+
+###
+
+
+# @name createHabit
+POST {{baseUrl}}/habits-tracker/habits
+Content-Type: application/json
+Cookie: {{authToken}}
+
+{
+    "title": "estudar backend",
+    "weekDays": [0, 1, 3]
+}
+
+###
+
+# @name deleteHabit
+DELETE {{baseUrl}}/habits-tracker/habits/2130146d-cd82-4a8f-a740-bf6354dd4b8f
+Content-Type: application/json
+Cookie: {{authToken}}
+
+###
+
+# @name findHabit
+GET {{baseUrl}}/habits-tracker/habits/{{firstHabitId}}
+Content-Type: application/json
+Cookie: {{authToken}}
+
+{
+    "date": "2024-07-05T23:06:17.386Z",
+    "dayHabitIds": []
+}
+
+###
+
+
+# @name fetchHabits
+GET {{baseUrl}}/habits-tracker/habits
+Cookie: {{authToken}}
+
+###
+
+
+
+# @name createDay
+POST {{baseUrl}}/habits-tracker/days
+Content-Type: application/json
+Cookie: {{authToken}}
+
+{
+    "date": "2024-07-08T18:38:57.739Z",
+    "dayHabitIds": ["75d7459b-9abf-40d5-a068-dcdeb2a08f69"]
+}
+
+###
+
+# @name findDayDetail
+GET {{baseUrl}}/habits-tracker/days/2024-07-08T03:00:00.000Z/details
+Cookie: {{authToken}}
+###
+
+# @name toggleDayHabit
+PATCH {{baseUrl}}/habits-tracker/toggle-day-habit?date=2024-07-08T03:00:00.000Z&habitId=75d7459b-9abf-40d5-a068-dcdeb2a08f69
+Cookie: {{authToken}}
+###
+
+# @name completedDayHabitsCount
+GET {{baseUrl}}/habits-tracker/days/completed-details
+Cookie: {{authToken}}
+###
+
