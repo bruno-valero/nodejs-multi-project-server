@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 
 import { Either, left, right } from '@/core/either'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
@@ -19,6 +20,8 @@ export type FindDayDetailsUseCaseResponse = Either<
   { day: Day | null; everyDayHabit: Habit[] }
 >
 
+dayjs.extend(utc)
+
 export class FindDayDetailsUseCase {
   constructor(
     private daysRepository: DaysRepository,
@@ -37,8 +40,8 @@ export class FindDayDetailsUseCase {
     // if (!existingDay) return left(new ResourceNotFoundError())
 
     const weekDay = existingDay
-      ? dayjs(existingDay.date).get('day')
-      : dayjs(date).get('day')
+      ? dayjs.utc(existingDay.date).get('day')
+      : dayjs.utc(date).get('day')
 
     const everyDayHabit = await this.habitsRepository.findManyByWeekDay(
       weekDay,

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 
 import { DayHabitsRepository } from '@/domain/core-domains/habits-tracker/application/repositories/day-habits-repository'
 import { HabitsRepository } from '@/domain/core-domains/habits-tracker/application/repositories/habits-reposiory'
@@ -6,6 +7,8 @@ import { DayHabit } from '@/domain/core-domains/habits-tracker/enterprise/entiti
 
 import { PrismaHabitsTracker } from '..'
 import { PrismaDayHabitsMapper } from '../mappers/prisma-day-habits-mapper'
+
+dayjs.extend(utc)
 
 export class PrismaDayHabitsRepository implements DayHabitsRepository {
   constructor(
@@ -26,7 +29,7 @@ export class PrismaDayHabitsRepository implements DayHabitsRepository {
   }
 
   async findById(id: string, date?: Date): Promise<DayHabit | null> {
-    const weekDay = dayjs(date).get('day')
+    const weekDay = dayjs.utc(date).get('day')
 
     const prismaDayHabit = await this.prisma.prismaDayHabit.findUnique({
       where: {
@@ -69,7 +72,7 @@ export class PrismaDayHabitsRepository implements DayHabitsRepository {
     userId: string,
     date?: Date,
   ): Promise<DayHabit | null> {
-    const weekDay = dayjs(date).get('day')
+    const weekDay = dayjs.utc(date).get('day')
 
     const prismaDayHabit = await this.prisma.prismaDayHabit.findUnique({
       where: {
@@ -111,7 +114,7 @@ export class PrismaDayHabitsRepository implements DayHabitsRepository {
   }
 
   async findManyByUserId(userId: string, date?: Date): Promise<DayHabit[]> {
-    const weekDay = dayjs(date).get('day')
+    const weekDay = dayjs.utc(date).get('day')
 
     const prismaDayHabit = await this.prisma.prismaDayHabit.findMany({
       where: {
@@ -153,7 +156,7 @@ export class PrismaDayHabitsRepository implements DayHabitsRepository {
   }
 
   async findManyByDayId(dayId: string, date?: Date): Promise<DayHabit[]> {
-    const weekDay = dayjs(date).get('day')
+    const weekDay = dayjs.utc(date).get('day')
 
     const prismaDayHabit = await this.prisma.prismaDayHabit.findMany({
       where: {
@@ -195,7 +198,7 @@ export class PrismaDayHabitsRepository implements DayHabitsRepository {
   }
 
   async countByDayId(dayId: string, date?: Date | undefined): Promise<number> {
-    const weekDay = dayjs(date).get('day')
+    const weekDay = dayjs.utc(date).get('day')
 
     const prismaDayHabitAmount = await this.prisma.prismaDayHabit.count({
       where: {

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import z from 'zod'
 
@@ -8,12 +9,14 @@ import { makeFetchDaysWithCompletedNumberUseCase } from '@/infra/applications/ha
 
 import { DayPresenter } from '../../../presenters/day-presenter'
 
+dayjs.extend(utc)
+
 export async function fetchDaysWithCompletedNumberController(
   req: FastifyRequest,
   res: FastifyReply,
 ) {
   const querySchema = z.object({
-    from: z.coerce.date().default(dayjs().startOf('year').toDate()),
+    from: z.coerce.date().default(dayjs.utc().startOf('year').toDate()),
     to: z.coerce.date().default(new Date()),
   })
   const userId = req.user.sub
